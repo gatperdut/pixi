@@ -1,0 +1,25 @@
+{
+  "name": "pixi",
+  "version": "0.0.1",
+  "description": "Pixi test.",
+  "main": "gulpfile.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "repository": {},
+  "dependencies": {
+    "pixi.js-legacy": "5.1.5"
+  },
+  "devDependencies": {
+    "connect": "3.7.0",
+    "del": "5.1.0",
+    "gulp": "3.9.1",
+    "gulp-inject": "5.0.4",
+    "gulp-order": "1.2.0",
+    "gulp-rename": "1.4.0",
+    "require-dir": "1.2.0",
+    "run-sequence": "2.2.1",
+    "serve-static": "1.14.1",
+    "url": "0.11.0"
+  }
+}
