@@ -1,0 +1,93 @@
+{
+  "name": "plk1000",
+  "version": 4,
+  "fps": 1,
+  "action_frame": 0,
+  "frames_per_direction": 1,
+  "offset": {
+    "x": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "y": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "data": [
+    [
+      {
+        "width": 80,
+        "height": 36,
+        "size": 2880,
+        "offset": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    ],
+    [
+      {
+        "width": 80,
+        "height": 36,
+        "size": 2880,
+        "offset": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    ],
+    [
+      {
+        "width": 80,
+        "height": 36,
+        "size": 2880,
+        "offset": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    ],
+    [
+      {
+        "width": 80,
+        "height": 36,
+        "size": 2880,
+        "offset": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    ],
+    [
+      {
+        "width": 80,
+        "height": 36,
+        "size": 2880,
+        "offset": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    ],
+    [
+      {
+        "width": 80,
+        "height": 36,
+        "size": 2880,
+        "offset": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    ]
+  ]
+}

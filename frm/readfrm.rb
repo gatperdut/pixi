@@ -23,7 +23,8 @@ def s16(file)
   file.read(2).unpack('s>')
 end
 
-entries = Dir.entries('./raw')
+critters = Dir.entries('./raw/critters')
+tiles    = Dir.entries('./raw/tiles')
 
 palette = []
 
@@ -39,12 +40,12 @@ File.open('./color.pal') do |file|
   end
 end
 
-def process(entry, palette)
-  File.open("./raw/#{entry}") do |file|
+def process(entry, path, palette)
+  File.open("./raw/#{path}/#{entry}") do |file|
     result = {}
     result[:name] = entry.split('.')[0].downcase
 
-    resultdir = "../assets/critters/#{result[:name]}"
+    resultdir = "../assets/#{path}/#{result[:name]}"
     unless File.directory?(resultdir)
       FileUtils.mkdir_p(resultdir)
     end
@@ -113,9 +114,14 @@ def process(entry, palette)
   end
 end
 
-entries.each do |entry|
-  next if File.directory?(entry)
+critters.each do |critter|
+  next if File.directory?(critter)
 
-  process(entry, palette)
+  process(critter, 'critters', palette)
 end
 
+tiles.each do |tile|
+  next if File.directory?(tile)
+
+  process(tile, 'tiles', palette)
+end

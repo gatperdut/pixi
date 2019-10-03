@@ -3,14 +3,20 @@
 function main() {
   FEng.setup();
 
-  function callback(critter) {
-    FEng.app.stage.addChild(critter.container);
+  function crittercallback(critter) {
+    FEng.app.stage.addChild(critter.sprite);
     critter.animation.start();
   }
 
-  var male = new Critter('hmmaxxeb', callback, 96, 96);
+  var male = new Critter('hmmaxxeb', crittercallback, 96, 96);
 
-  var female = new Critter('hfmaxxgb', callback, 196, 96);
+  var female = new Critter('hfmaxxgb', crittercallback, 196, 96);
+
+  function mapcallback(map) {
+    FEng.app.stage.addChild(map.container);
+  }
+
+  var map = new Map(mapcallback);
 
   PIXI.keyboardManager.on('pressed', function(key) {
     if (key === PIXI.keyboard.Key.D) {

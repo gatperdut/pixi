@@ -1,55 +1,56 @@
 'use strict';
 
 function Critter(name, callback, x, y) {
-  var self = this;
-
   this.name      = name;
+  this._callback = callback;
+  this._x        = x;
+  this._y        = y;
   this.data      = null;
-  this.container = new PIXI.Container();
   this.textures  = [];
   this.sprite    = null
   this.direction = 0;
 
   this.animation = new Animation(this);
 
-  var loader = new PIXI.Loader();
+  this.loader = new PIXI.Loader();
+
+  this.loader
+  .add('data', 'assets/critters/' + this.name + '/data.json')
+  .load(this._dataLoaded.bind(this));
+}
+
+Critter.prototype._dataLoaded = function(loader, resources) {
+  this.data = resources.data.data;
+  for (var i = 0; i < 6; i++) {
+    for (var j = 0; j < this.data.frames_per_direction; j++) {
+      loader
+      .add(this.name + '_' + i + '_' + j, 'assets/critters/' + this.name + '/' + i + '_' + j + '.png');
+    }
+  }
 
   loader
-  .add('data', 'assets/critters/' + name + '/data.json')
-  .load(_dataLoaded);
+  .load(this._texturesLoaded.bind(this));
+};
 
-  function _dataLoaded(loader, resources) {
-    self.data = resources.data.data;
-    for (var i = 0; i < 6; i++) {
-      for (var j = 0; j < self.data.frames_per_direction; j++) {
-        loader
-        .add(name + '_' + i + '_' + j, 'assets/critters/' + name + '/' + i + '_' + j + '.png');
-      }
+Critter.prototype._texturesLoaded = function(loader, resources) {
+  for (var i = 0; i < 6; i++) {
+    this.textures[i] = [];
+    for (var j = 0; j < this.data.frames_per_direction; j++) {
+      this.textures[i][j] = resources[this.name + '_' + i + '_' + j].texture
     }
-
-    loader
-    .load(_texturesLoaded);
   }
 
-  function _texturesLoaded(loader, resources) {
-    for (var i = 0; i < 6; i++) {
-      self.textures[i] = [];
-      for (var j = 0; j < self.data.frames_per_direction; j++) {
-        self.textures[i][j] = resources[self.name + '_' + i + '_' + j].texture
-      }
-    }
+  this.sprite = new PIXI.Sprite(this.textures[this.direction][this.animation.fnum]);
+  this.sprite.anchor.set(0.5, 1.0);
+  this.xy(this._x, this._y);
 
-    self.sprite = new PIXI.Sprite(self.textures[self.direction][self.animation.fnum]);
-    self.sprite.anchor.set(0.5, 1.0);
-
-    self.container.addChild(self.sprite);
-
-    self.container.position.set(x, y);
-
-    callback(self);
-  }
-}
+  this._callback(this);
+};
 
 Critter.prototype.texture = function(fnum) {
   this.sprite.texture = this.textures[this.direction][fnum];
+};
+
+Critter.prototype.xy = function(x, y) {
+  this.sprite.position.set(x, y);
 };

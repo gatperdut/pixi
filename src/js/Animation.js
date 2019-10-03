@@ -1,8 +1,6 @@
 'use strict';
 
 function Animation(critter) {
-  var self = this;
-
   this.critter = critter;
   this.ticker  = new PIXI.Ticker();
   this.counter = 0;
