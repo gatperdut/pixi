@@ -6,6 +6,7 @@ gulp.task('watch-js', function() {
       'src/js/**/*.js',
     ],
     [
-      'copy-js'
+      'copy-js',
+      'js-hint'
     ]);
 });

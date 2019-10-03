@@ -1,0 +1,28 @@
+{
+  "bitwise"  : true,
+  "curly"     : true,
+  "eqeqeq"    : true,
+  "forin"     : true,
+  "freeze"    : true,
+  "futurehostile" : true,
+  "jquery"    : true,
+  "latedef"   : true,
+  "noarg"     : true,
+  "nocomma"   : true,
+  "nonbsp"    : true,
+  "nonew"     : true,
+  "notypeof"  : true,
+  "quotmark"  : "single",
+  "singleGroups" : true,
+  "strict"    : "global",
+  "undef"     : true,
+  "unused"    : true,
+
+  "predef": {
+    "PIXI"     : true,
+    "FEng"     : true,
+    "console"  : true,
+    "document" : true,
+    "window"   : true
+  }
+}

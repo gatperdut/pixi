@@ -6,6 +6,8 @@ gulp.task('watch-index', function() {
       'index.html',
     ],
     [
-      'copy-index'
+      'copy-index',
+      'inject-css',
+      'inject-js'
     ]);
 });
