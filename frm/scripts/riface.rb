@@ -6,7 +6,7 @@ require './_palette'
 require './_headertile'
 require './_frame'
 
-tiles = Dir.entries('../raw/tiles')
+ifaceelems = Dir.entries('../raw/iface')
 
 def process(entry)
   palette = rpalette
@@ -14,12 +14,12 @@ def process(entry)
   result = {}
   result[:name] = entry.split('.')[0].downcase
 
-  resultdir = "../../assets/tiles/#{result[:name]}"
+  resultdir = "../../assets/iface/#{result[:name]}"
   unless File.directory?(resultdir)
     FileUtils.mkdir_p(resultdir)
   end
 
-  File.open("../raw/tiles/#{entry}") do |file|
+  File.open("../raw/iface/#{entry}") do |file|
     result[:header] = rheadertile(file)
 
     result[:frame] = rframe(result[:header], resultdir, file, 0, 0, palette, [])
@@ -30,8 +30,8 @@ def process(entry)
   end
 end
 
-tiles.each do |tile|
-  next if File.directory?(tile)
+ifaceelems.each do |ifaceelem|
+  next if File.directory?(ifaceelem)
 
-  process(tile)
+  process(ifaceelem)
 end

@@ -14,28 +14,26 @@ function Critter(name, callback, x, y) {
 
   this.loader = new PIXI.Loader();
 
-  this.loader
-  .add('data', 'assets/critters/' + this.name + '/data.json')
-  .load(this._dataLoaded.bind(this));
+  $.getJSON('assets/critters/' + this.name + '/data.json', this._dataLoaded.bind(this));
 }
 
-Critter.prototype._dataLoaded = function(loader, resources) {
-  this.data = resources.data.data;
+Critter.prototype._dataLoaded = function(response) {
+  this.data = response;
   for (var i = 0; i < 6; i++) {
-    for (var j = 0; j < this.data.frames_per_direction; j++) {
-      loader
+    for (var j = 0; j < this.data.header.frames_per_direction; j++) {
+      this.loader
       .add(this.name + '_' + i + '_' + j, 'assets/critters/' + this.name + '/' + i + '_' + j + '.png');
     }
   }
 
-  loader
+  this.loader
   .load(this._texturesLoaded.bind(this));
 };
 
 Critter.prototype._texturesLoaded = function(loader, resources) {
   for (var i = 0; i < 6; i++) {
     this.textures[i] = [];
-    for (var j = 0; j < this.data.frames_per_direction; j++) {
+    for (var j = 0; j < this.data.header.frames_per_direction; j++) {
       this.textures[i][j] = resources[this.name + '_' + i + '_' + j].texture
     }
   }
