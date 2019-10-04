@@ -13,14 +13,15 @@ Animation.prototype.start = function() {
 };
 
 Animation.prototype.iterate = function(delta) {
-  this.counter = ++this.counter % this.critter.data.fps;
+  this.counter = ++this.counter % this.critter.data.header.fps;
 
   if (!this.counter) {
-    this.fnum = ++this.fnum % this.critter.data.frames_per_direction;
+    this.fnum = ++this.fnum % this.critter.data.header.frames_per_direction;
     this.critter.texture(this.fnum);
   }
 };
 
 Animation.prototype.stop = function() {
   this.ticker.stop();
+  this.counter = 0;
 };

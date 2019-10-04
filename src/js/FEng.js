@@ -4,7 +4,7 @@ var FEng = {
   app: new PIXI.Application({
     width:  1200,
     height: 1024,
-    backgroundColor: 0x1099bb,
+    backgroundColor: 0xFF0000,
     resolution: 1
   }),
   container: new PIXI.Container(),
