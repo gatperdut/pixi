@@ -1,4 +1,5 @@
 node_modules
-assets/critters/*/
-assets/tiles/*/
+assets/critters
+assets/tiles
+assets/iface
 dist
