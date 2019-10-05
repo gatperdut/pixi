@@ -9,7 +9,7 @@ function Animation(critter) {
 
 Animation.prototype.start = function() {
   this.counter = 0;
-  FEng.app.ticker.add(delta => this.iterate(delta));
+  fe.app.ticker.add(delta => this.iterate(delta));
 };
 
 Animation.prototype.iterate = function(delta) {

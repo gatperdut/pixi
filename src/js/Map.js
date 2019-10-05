@@ -4,12 +4,12 @@ function Map(callback) {
   this.callback    = callback;
   this.loader      = new PIXI.Loader();
   this.texture     = {};
-  this.offset      = new PIXI.Point(100, 400);
-  this.size        = new PIXI.Point(20, 20);
+  this.offset      = new PIXI.Point(0, 0);
+  this.size        = new PIXI.Point(20, 25);
   this.pathfinding = new PathFinding(this);
   this._setContainers();
 
-  this.container.position.set(this.offset.x, this.offset.y);
+  this.panto(100, 400);
 
   this._drawAxis();
 
@@ -29,6 +29,26 @@ Map.prototype._setContainers = function() {
 
   var hexagons = new PIXI.Container();
   this.container.addChild(hexagons);
+
+  var critters = new PIXI.Container();
+  this.container.addChild(critters);
+};
+
+Map.prototype.setContainerPos = function() {
+  this.container.position.set(this.offset.x, this.offset.y);
+};
+
+Map.prototype.panto = function(x, y) {
+  this.offset.x = x;
+  this.offset.y = y;
+  this.setContainerPos();
+};
+
+Map.prototype.pandir = function(key) {
+  var panamount = fe.utils.panamount[key];
+  this.offset.x += panamount[0];
+  this.offset.y += panamount[1];
+  this.setContainerPos();
 };
 
 Map.prototype._drawAxis = function() {
@@ -110,8 +130,8 @@ Map.prototype._placeHexagonCoords = function(x, y, w, h) {
 };
 
 Map.prototype._hexagonWithinMap = function(position) {
-  var tan14 = Math.tan(FEng.utils.deg2rad(14));
-  var tan53 = Math.tan(FEng.utils.deg2rad(53));
+  var tan14 = Math.tan(fe.utils.deg2rad(14));
+  var tan53 = Math.tan(fe.utils.deg2rad(53));
   //north
   if (position.y < -tan14 * position.x) {
     return false;
@@ -154,9 +174,7 @@ Map.prototype._placeHexagonGrid = function() {
         continue;
       }
 
-      var texture = (w === 20 && h === 20) ? this.texture.hexagonpath : this.texture.hexagon;
-
-      var sprite = new PIXI.Sprite(texture);
+      var sprite = new PIXI.Sprite(this.texture.hexagon);
       sprite.anchor.set(0.5, 0.5);
       sprite.position.set(hexpos.x, hexpos.y);
       sprite.coord = {

@@ -23,7 +23,6 @@
     "console"  : true,
     "document" : true,
     "EasyStar" : true,
-    "FEng"     : true,
     "PIXI"     : true,
     "window"   : true
   }

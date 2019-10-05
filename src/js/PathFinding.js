@@ -1,7 +1,6 @@
 'use strict';
 
-function PathFinding(map) {
-  this.map = map;
+function PathFinding() {
   this.hexmap = {
     obstacles: [],
     sprites:   []
@@ -21,7 +20,7 @@ function PathFinding(map) {
 PathFinding.prototype.fillPathMap = function(w, h, value, sprite) {
   if (!this.hexmap.obstacles[w]) {
     this.hexmap.obstacles[w] = [];
-    this.hexmap.sprites[w]   = []
+    this.hexmap.sprites[w]   = [];
   }
   this.hexmap.obstacles[w][h] = value;
   this.hexmap.sprites[w][h]   = sprite;
@@ -32,10 +31,10 @@ PathFinding.prototype.fillPathMap = function(w, h, value, sprite) {
 PathFinding.prototype._drawPath = function(path) {
   var self = this;
   if (path === null) {
-    console.log("Path was not found.");
+    console.log('Path was not found.');
   } else {
     _.each(path, function(step) {
-      self.hexmap.sprites[step.x][step.y].texture = self.map.texture.hexagonpath;
+      self.hexmap.sprites[step.x][step.y].texture = fe.map.texture.hexagonpath;
     });
   }
 };

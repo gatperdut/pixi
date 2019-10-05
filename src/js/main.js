@@ -1,27 +1,16 @@
 'use strict';
 
+var fe;
+
 function main() {
-  FEng.setup();
+  fe = new FE();
+  fe.setup();
+  fe.createDelegates();
 
-  function crittercallback(critter) {
-    FEng.app.stage.addChild(critter.sprite);
-    critter.animation.start();
-  }
-  var male = new Critter('hmmaxxeb', crittercallback, 96, 96);
-  var female = new Critter('hfmaxxgb', crittercallback, 196, 96);
+  fe.critterholder.addCritter('male', 'hmmaxxeb', 20, 20);
+  //fe.critterholder.addCritter('female', 'hfmaxxgb', 24, 50);
 
-  function mapcallback(map) {
-    FEng.app.stage.addChild(map.container);
-  }
-  var map = new Map(mapcallback);
-
-  PIXI.keyboardManager.on('pressed', function(key) {
-    if (key === PIXI.keyboard.Key.D) {
-      male.direction = ++male.direction % 6;
-    }
-  });
-
-  FEng.app.ticker.add(delta => gameloop(delta));
+  fe.app.ticker.add(delta => gameloop(delta));
 
   function gameloop(delta) {
     PIXI.keyboardManager.update();
