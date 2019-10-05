@@ -26,6 +26,9 @@ Animation.prototype.iterate = function(delta) {
     this.counter = 0;
     this.fnum = ++this.fnum % this._galleryRoot().data.header.frames_per_direction;
     this.critter.sprite.texture = this._galleryRoot().textures[this.critter.direction][this.fnum];
+    
+    var aux = !this.fnum ? 2 : 0;
+    this.critter.place(this.critter.coord.x + aux, this.critter.coord.y + aux);
   }
 };
 
