@@ -19,10 +19,12 @@
   "unused"    : true,
 
   "predef": {
-    "PIXI"     : true,
-    "FEng"     : true,
+    "_"        : true,
     "console"  : true,
     "document" : true,
+    "EasyStar" : true,
+    "FEng"     : true,
+    "PIXI"     : true,
     "window"   : true
   }
 }

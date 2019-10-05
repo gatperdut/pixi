@@ -1,13 +1,13 @@
 'use strict';
 
 function Map(callback) {
-  this.callback  = callback;
-  this.loader    = new PIXI.Loader();
-  this.texture   = {};
-  this.container = new PIXI.Container();
-  this.offset    = new PIXI.Point(-100, 400);
-  this.size      = new PIXI.Point(20, 20);
-  this.pathmap   = [];
+  this.callback    = callback;
+  this.loader      = new PIXI.Loader();
+  this.texture     = {};
+  this.offset      = new PIXI.Point(100, 400);
+  this.size        = new PIXI.Point(20, 20);
+  this.pathfinding = new PathFinding(this);
+  this._setContainers();
 
   this.container.position.set(this.offset.x, this.offset.y);
 
@@ -20,6 +20,16 @@ function Map(callback) {
   .add('hexagonpath', 'assets/iface/' + 'msef001' + '/0_0.png')
   .load(this._textureLoaded.bind(this));
 }
+
+Map.prototype._setContainers = function() {
+  this.container = new PIXI.Container();
+
+  var tiles = new PIXI.Container();
+  this.container.addChild(tiles);
+
+  var hexagons = new PIXI.Container();
+  this.container.addChild(hexagons);
+};
 
 Map.prototype._drawAxis = function() {
   var lengthx = 49.5 * this.size.x + 200;
@@ -35,8 +45,8 @@ Map.prototype._drawAxis = function() {
   liney.moveTo(0, 0);
   liney.lineTo(Math.sin(0.925024) * lengthy, Math.cos(0.925024) * lengthy);
 
-  this.container.addChild(linex);
-  this.container.addChild(liney);
+  this.container.children[0].addChild(linex);
+  this.container.children[0].addChild(liney);
 };
 
 Map.prototype._placeTileCoords = function(x, y, w, h) {
@@ -44,7 +54,7 @@ Map.prototype._placeTileCoords = function(x, y, w, h) {
   coord.x = x + 23;
   coord.y = y - 3;
 
-  this.container.addChild(coord);
+  this.container.children[0].addChild(coord);
 };
 
 Map.prototype._placeTileSeparators = function() {
@@ -54,11 +64,11 @@ Map.prototype._placeTileSeparators = function() {
     line.lineStyle(3, 0x0000FF);
     var x0 =  48 * w;
     var y0 = -12 * w;
-    line.pivot.set(0,0)
+    line.pivot.set(0,0);
     line.moveTo(x0, y0);
     line.lineTo(x0 + 32 * this.size.y, y0 + 24 * this.size.y );
 
-    this.container.addChild(line);  
+    this.container.children[0].addChild(line);  
   }
 
   for (var h = 0; h < this.size.y + 1; h++) {
@@ -71,7 +81,7 @@ Map.prototype._placeTileSeparators = function() {
     line.moveTo(x0, y0);
     line.lineTo(x0 + 48 * this.size.x, y0 - 12 * this.size.x );
 
-    this.container.addChild(line);  
+    this.container.children[0].addChild(line);  
   }
 };
 
@@ -82,7 +92,7 @@ Map.prototype._placeTiles = function() {
       sprite.anchor.set(0.0, 0.33);
       sprite.position.set(w * 48 + 32 * h, h * 24 - 12 * w);
 
-      this.container.addChild(sprite);
+      this.container.children[0].addChild(sprite);
       
       //this._placeTileCoords(sprite.position.x, sprite.position.y, w, h);
     }
@@ -96,12 +106,12 @@ Map.prototype._placeHexagonCoords = function(x, y, w, h) {
   coord.x = x - 12;
   coord.y = y - 7;
 
-  this.container.addChild(coord);
+  this.container.children[1].addChild(coord);
 };
 
 Map.prototype._hexagonWithinMap = function(position) {
   var tan14 = Math.tan(FEng.utils.deg2rad(14));
-  var tan53 = Math.tan(FEng.utils.deg2rad(53))
+  var tan53 = Math.tan(FEng.utils.deg2rad(53));
   //north
   if (position.y < -tan14 * position.x) {
     return false;
@@ -129,45 +139,26 @@ Map.prototype._mouseout = function(data) {
   data.currentTarget.texture = this.texture.hexagon;
 };
 
-Map.prototype._mousedown = function(data) {
-  var easystar = new EasyStar.js()
-  easystar.setGrid(this.pathmap);
-  easystar.setAcceptableTiles([0]);
-  easystar.enableDiagonals(false);
-  easystar.findPath(20, 20, data.target.coord.w, data.target.coord.h, function(path) {
-    if (path === null) {
-      console.log("Path was not found.");
-    } else {
-      _.each(path, function(step) {
-        console.log('x=' + step.x +', y=' + step.y);
-      });
-    }
-  });
-  easystar.calculate();
-};
 
-Map.prototype._fillPathMap = function(w, h, value) {
-  if (!this.pathmap[w]) {
-    this.pathmap[w] = [];
-  }
-  this.pathmap[w][h] = value;
+Map.prototype._mousedown = function(data) {
+  this.pathfinding.findPath(data);
 };
 
 Map.prototype._placeHexagonGrid = function() {
   var top = Math.max(this.size.x, this.size.y) * 3 + 1;
   for (var w = 0; w < top; w++) {
-    for (var h = 0; h < top; h++) {
-      var position = new PIXI.Point(w * 16 + 16 * h, h * 12 - 12 * w);
-      if (!this._hexagonWithinMap(position)) {
-        this._fillPathMap(w, h, 1);
+    for (var h = 1; h < top; h++) {
+      var hexpos = new PIXI.Point(w * 16 + 16 * h, h * 12 - 12 * w);
+      if (!this._hexagonWithinMap(hexpos)) {
+        this.pathfinding.fillPathMap(w, h, 1, null);
         continue;
       }
 
-      var texture = (w == 20 && h == 20) ? this.texture.hexagonpath : this.texture.hexagon;
+      var texture = (w === 20 && h === 20) ? this.texture.hexagonpath : this.texture.hexagon;
 
       var sprite = new PIXI.Sprite(texture);
       sprite.anchor.set(0.5, 0.5);
-      sprite.position.set(position.x, position.y);
+      sprite.position.set(hexpos.x, hexpos.y);
       sprite.coord = {
         w: w,
         h: h
@@ -178,11 +169,11 @@ Map.prototype._placeHexagonGrid = function() {
       sprite.mouseout  = this._mouseout.bind(this);
       sprite.mousedown = this._mousedown.bind(this);
 
-      this.container.addChild(sprite);
+      this.container.children[1].addChild(sprite);
 
-      this._placeHexagonCoords(position.x, position.y, w, h);
+      this._placeHexagonCoords(hexpos.x, hexpos.y, w, h);
 
-      this._fillPathMap(w, h, 0);
+      this.pathfinding.fillPathMap(w, h, 0, sprite);
     }
   }  
 };
