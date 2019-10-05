@@ -14,10 +14,10 @@ function Map(callback) {
   this._drawAxis();
 
   this.loader
-  .add('plk1000',     'assets/tiles/' + 'plk1000' + '/0_0.png')
-  .add('hexagon',     'assets/iface/' + 'msef003' + '/0_0.png')
-  .add('hexagonsel',  'assets/iface/' + 'msef002' + '/0_0.png')
-  .add('hexagonpath', 'assets/iface/' + 'msef001' + '/0_0.png')
+  .add('plk1000',     'assets/tiles/' + 'PLK1000.FRM' + '/0_0.png')
+  .add('hexagon',     'assets/iface/' + 'msef003.frm' + '/0_0.png')
+  .add('hexagonsel',  'assets/iface/' + 'MSEF002.FRM' + '/0_0.png')
+  .add('hexagonpath', 'assets/iface/' + 'MSEF001.FRM' + '/0_0.png')
   .load(this._textureLoaded.bind(this));
 }
 

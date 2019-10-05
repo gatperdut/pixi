@@ -2,26 +2,34 @@
 
 function Animation(critter) {
   this.critter = critter;
-  this.ticker  = new PIXI.Ticker();
+  this.tickerinstance  = null;
   this.counter = 0;
   this.fnum    = 0;
 }
 
+Animation.prototype._galleryRoot = function() {
+  return fe.crittergallery.list[this.critter.actor][this.critter.action];
+};
+
 Animation.prototype.start = function() {
   this.counter = 0;
-  fe.app.ticker.add(delta => this.iterate(delta));
+  this.tickerinstance = fe.app.ticker.add(delta => this.iterate(delta));
 };
 
 Animation.prototype.iterate = function(delta) {
-  this.counter = ++this.counter % this.critter.data.header.fps;
+  var goalfps = 60 / delta;
+  var goalcounter = goalfps / this._galleryRoot().data.header.fps;
+  
+  this.counter++;
 
-  if (!this.counter) {
-    this.fnum = ++this.fnum % this.critter.data.header.frames_per_direction;
-    this.critter.texture(this.fnum);
+  if (this.counter > goalcounter) {
+    this.counter = 0;
+    this.fnum = ++this.fnum % this._galleryRoot().data.header.frames_per_direction;
+    this.critter.sprite.texture = this._galleryRoot().textures[this.critter.direction][this.fnum];
   }
 };
 
 Animation.prototype.stop = function() {
-  this.ticker.stop();
+  this.tickerinstance.stop();
   this.counter = 0;
 };

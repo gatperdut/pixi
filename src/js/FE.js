@@ -34,6 +34,7 @@ FE.prototype.setup = function() {
 };
 
 FE.prototype.createDelegates = function() {
+  this.crittergallery = new CritterGallery();
   this.critterholder = new CritterHolder();
   this.map = new Map(this._mapcallback.bind(this));
   this.utils = new Utils();

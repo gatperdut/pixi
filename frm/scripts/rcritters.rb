@@ -15,6 +15,10 @@ def process(entry)
   result = {}
   result[:name] = entry
 
+  noext = entry.split('.')[0]
+  result[:actor]  = noext.slice(0, 6)
+  result[:action] = noext.slice(6, 7);
+
   resultdir = "../../assets/critters/#{result[:name]}"
   unless File.directory?(resultdir)
     FileUtils.mkdir_p(resultdir)

@@ -8,14 +8,13 @@ def rheadercritter(file)
   result[:action_frame]         = rbytes(:u16, file, 0x6)
   result[:frames_per_direction] = rbytes(:u16, file, 0x8)
 
-  result[:offsets] = {}
-  result[:offsets][:x] = []
-  result[:offsets][:y] = []
+  result[:offsets] = []
   6.times do |i|
-    result[:offsets][:x] << rbytes(:s16, file, 0xa + i * 2)
-  end
-  6.times do |i|
-    result[:offsets][:y] << rbytes(:s16, file, 0x16 + i * 2)
+    offset = {}
+
+    offset[:x] = rbytes(:s16, file, 0xa + i * 2)
+    offset[:y] = rbytes(:s16, file, 0x16 + i * 2)
+    result[:offsets] << offset
   end
 
   result[:frm_offsets] = []
