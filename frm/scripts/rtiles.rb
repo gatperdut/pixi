@@ -12,7 +12,7 @@ def process(entry)
   palette = rpalette
 
   result = {}
-  result[:name] = entry.split('.')[0].downcase
+  result[:name] = entry
 
   resultdir = "../../assets/tiles/#{result[:name]}"
   unless File.directory?(resultdir)
