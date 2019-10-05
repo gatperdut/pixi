@@ -7,27 +7,33 @@ function Map(callback) {
   this.container = new PIXI.Container();
   this.offset    = new PIXI.Point(-100, 400);
   this.size      = new PIXI.Point(20, 20);
+  this.pathmap   = [];
 
   this.container.position.set(this.offset.x, this.offset.y);
 
   this._drawAxis();
 
   this.loader
-  .add('plk1000', 'assets/tiles/' + 'plk1000' + '/0_0.png')
-  .add('hexagon', 'assets/iface/' + 'msef003' + '/0_0.png')
+  .add('plk1000',     'assets/tiles/' + 'plk1000' + '/0_0.png')
+  .add('hexagon',     'assets/iface/' + 'msef003' + '/0_0.png')
+  .add('hexagonsel',  'assets/iface/' + 'msef002' + '/0_0.png')
+  .add('hexagonpath', 'assets/iface/' + 'msef001' + '/0_0.png')
   .load(this._textureLoaded.bind(this));
 }
 
 Map.prototype._drawAxis = function() {
+  var lengthx = 49.5 * this.size.x + 200;
+  var lengthy = 40.0 * this.size.y + 200;
+
   var linex = new PIXI.Graphics();
   linex.lineStyle(3, 0x00FF00);
   linex.moveTo(0, 0);
-  linex.lineTo(2000, -500);
+  linex.lineTo(Math.cos(0.244346) * lengthx, -Math.sin(0.244346) * lengthx);
 
   var liney = new PIXI.Graphics();
   liney.lineStyle(3, 0x00FF00);
   liney.moveTo(0, 0);
-  liney.lineTo(2000, 1500);
+  liney.lineTo(Math.sin(0.925024) * lengthy, Math.cos(0.925024) * lengthy);
 
   this.container.addChild(linex);
   this.container.addChild(liney);
@@ -115,28 +121,77 @@ Map.prototype._hexagonWithinMap = function(position) {
    return true;
 };
 
+Map.prototype._mouseover = function(data) {
+  data.target.texture = this.texture.hexagonsel;
+};
+
+Map.prototype._mouseout = function(data) {
+  data.currentTarget.texture = this.texture.hexagon;
+};
+
+Map.prototype._mousedown = function(data) {
+  var easystar = new EasyStar.js()
+  easystar.setGrid(this.pathmap);
+  easystar.setAcceptableTiles([0]);
+  easystar.enableDiagonals(false);
+  easystar.findPath(20, 20, data.target.coord.w, data.target.coord.h, function(path) {
+    if (path === null) {
+      console.log("Path was not found.");
+    } else {
+      _.each(path, function(step) {
+        console.log('x=' + step.x +', y=' + step.y);
+      });
+    }
+  });
+  easystar.calculate();
+};
+
+Map.prototype._fillPathMap = function(w, h, value) {
+  if (!this.pathmap[w]) {
+    this.pathmap[w] = [];
+  }
+  this.pathmap[w][h] = value;
+};
+
 Map.prototype._placeHexagonGrid = function() {
   var top = Math.max(this.size.x, this.size.y) * 3 + 1;
   for (var w = 0; w < top; w++) {
     for (var h = 0; h < top; h++) {
       var position = new PIXI.Point(w * 16 + 16 * h, h * 12 - 12 * w);
       if (!this._hexagonWithinMap(position)) {
+        this._fillPathMap(w, h, 1);
         continue;
       }
-      var sprite = new PIXI.Sprite(this.texture.hexagon);
+
+      var texture = (w == 20 && h == 20) ? this.texture.hexagonpath : this.texture.hexagon;
+
+      var sprite = new PIXI.Sprite(texture);
       sprite.anchor.set(0.5, 0.5);
       sprite.position.set(position.x, position.y);
+      sprite.coord = {
+        w: w,
+        h: h
+      };
+
+      sprite.interactive = true;
+      sprite.mouseover = this._mouseover.bind(this);
+      sprite.mouseout  = this._mouseout.bind(this);
+      sprite.mousedown = this._mousedown.bind(this);
 
       this.container.addChild(sprite);
 
-      //this._placeHexagonCoords(position.x, position.y, w, h);
+      this._placeHexagonCoords(position.x, position.y, w, h);
+
+      this._fillPathMap(w, h, 0);
     }
   }  
 };
 
 Map.prototype._textureLoaded = function(loader, resources) {
-  this.texture.floor   = resources['plk1000'].texture;
-  this.texture.hexagon = resources['hexagon'].texture;
+  this.texture.floor       = resources['plk1000'].texture;
+  this.texture.hexagon     = resources['hexagon'].texture;
+  this.texture.hexagonsel  = resources['hexagonsel'].texture;
+  this.texture.hexagonpath = resources['hexagonsel'].texture;
 
   this._placeTiles();
 
