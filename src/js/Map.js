@@ -152,16 +152,15 @@ Map.prototype._hexagonWithinMap = function(position) {
 };
 
 Map.prototype._mouseover = function(data) {
-  data.target.texture = this.texture.hexagonsel;
+  this.pathfinding.findPath(data, false);
 };
 
 Map.prototype._mouseout = function(data) {
-  data.currentTarget.texture = this.texture.hexagon;
+  this.pathfinding.clearPath();
 };
 
-
 Map.prototype._mousedown = function(data) {
-  this.pathfinding.findPath(data);
+  this.pathfinding.findPath(data, true);
 };
 
 Map.prototype._placeHexagonGrid = function() {

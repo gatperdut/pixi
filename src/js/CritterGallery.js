@@ -5,7 +5,7 @@ function CritterGallery() {
 
   this.actors = [
     'HFMAXX',
-    'HMMAXX'
+    'HMJMPS'
   ];
 
   this.actions = [

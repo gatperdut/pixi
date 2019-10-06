@@ -7,6 +7,8 @@ function PathFinding() {
   };
   this.easystar = new EasyStar.js();
 
+  this.path     = null;
+
   this.dirConditions = [
     EasyStar.TOP,
     EasyStar.RIGHT,
@@ -28,22 +30,57 @@ PathFinding.prototype.fillPathMap = function(w, h, value, sprite) {
   this.easystar.setDirectionalCondition(w, h, this.dirConditions);
 };
 
-PathFinding.prototype._drawPath = function(path) {
-  var self = this;
-  if (path === null) {
-    console.log('Path was not found.');
-  } else {
-    _.each(path, function(step) {
-      self.hexmap.sprites[step.x][step.y].texture = fe.map.texture.hexagonpath;
-    });
+PathFinding.prototype._pathValid = function(path) {
+  if (!path) {
+    console.log('Path was not found');
+    return false;
   }
+
+  return true;
 };
 
-PathFinding.prototype.findPath = function(data) {
+PathFinding.prototype._drawPath = function(path) {
+  var self = this;
+
+  if (this.path) {
+    this.clearPath();
+  }
+
+  if (!this._pathValid(path)) {
+    return;
+  }
+
+  this.path = path;
+
+  _.each(path, function(step) {
+    self.hexmap.sprites[step.x][step.y].texture = fe.map.texture.hexagonpath;
+  });
+};
+
+PathFinding.prototype._performWalk = function(path) {
+  if (!this._pathValid(path)) {
+    return;
+  }
+
+  fe.critterholder.critters.male.walker.walk(path);
+};
+
+PathFinding.prototype.findPath = function(data, perform) {
   this.easystar.setGrid(this.hexmap.obstacles);
   this.easystar.setAcceptableTiles([0]);
   this.easystar.enableDiagonals();
   //this.easystar.disableCornerCutting();
-  this.easystar.findPath(20, 20, data.target.coord.w, data.target.coord.h, this._drawPath.bind(this));
+
+  var callback = perform ? this._performWalk.bind(this) : this._drawPath.bind(this);
+
+  this.easystar.findPath(20, 20, data.target.coord.w, data.target.coord.h, callback);
   this.easystar.calculate();
+};
+
+PathFinding.prototype.clearPath = function() {
+  var self = this;
+
+  _.each(this.path, function(step) {
+    self.hexmap.sprites[step.x][step.y].texture = fe.map.texture.hexagon;
+  });
 };

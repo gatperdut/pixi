@@ -9,8 +9,8 @@ function main() {
 
   fe.crittergallery.initialized.promise().then(
     function() {
-      fe.critterholder.addCritter('male', 'HMMAXX', 20, 20);
-      fe.critterholder.addCritter('female', 'HFMAXX', 24, 50);
+      fe.critterholder.addCritter('male', 'HMJMPS', 20, 20);
+      //fe.critterholder.addCritter('female', 'HFMAXX', 24, 50);
 
       fe.app.ticker.add(delta => gameloop(delta));
 

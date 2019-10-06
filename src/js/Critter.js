@@ -3,18 +3,19 @@
 function Critter(name, actor) {
   this.name      = name;
   this.actor     = actor;
-  this.action    = 'AB';
-  this.direction = 1;
+  this.direction = 4;
   this.animation = new Animation(this);
 
   this.sprite    = new PIXI.Sprite(this._galleryRoot().textures[this.direction][this.animation.fnum]);
   this.sprite.anchor.set(0.5, 1.0);
 
   this.coord     = new PIXI.Point(0, 0);
+
+  this.walker    = new Walker(this);
 }
 
 Critter.prototype._galleryRoot = function() {
-  return fe.crittergallery.list[this.actor][this.action];
+  return fe.crittergallery.list[this.actor][this.animation.action];
 };
 
 Critter.prototype.place = function(x, y) {
@@ -26,16 +27,10 @@ Critter.prototype.place = function(x, y) {
 
   var globalAdjustment = this._galleryRoot().data.header.offsets[this.direction];
 
-  var frameAdjustment = new PIXI.Point(0, 0);
-  for (var i = 0; i < this.animation.fnum; i++) {
-    frameAdjustment.x += this._galleryRoot().data.frames[this.direction][i].offset.x;
-    frameAdjustment.y += this._galleryRoot().data.frames[this.direction][i].offset.y;
-  }
-
   var hexpos = fe.map.pathfinding.hexmap.sprites[x][y].position;
 
-  var newx = hexpos.x + globalAdjustment.x + frameAdjustment.x;
-  var newy = hexpos.y + globalAdjustment.y + frameAdjustment.y;
+  var newx = hexpos.x + globalAdjustment.x + this.animation.frameAdj.x;
+  var newy = hexpos.y + globalAdjustment.y + this.animation.frameAdj.y;
 
   this.sprite.position.set(newx, newy);
 };
