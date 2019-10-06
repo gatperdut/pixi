@@ -152,7 +152,7 @@ Map.prototype._hexagonWithinMap = function(position) {
 };
 
 Map.prototype._mouseover = function(data) {
-  this.pathfinding.findPath(data, false);
+  this.pathfinding.findPath(data.target.coord, false);
 };
 
 Map.prototype._mouseout = function(data) {
@@ -160,16 +160,17 @@ Map.prototype._mouseout = function(data) {
 };
 
 Map.prototype._mousedown = function(data) {
-  this.pathfinding.findPath(data, true);
+  this.pathfinding.clearPath();
+  this.pathfinding.findPath(data.target.coord, true);
 };
 
 Map.prototype._placeHexagonGrid = function() {
   var top = Math.max(this.size.x, this.size.y) * 3 + 1;
-  for (var w = 0; w < top; w++) {
-    for (var h = 1; h < top; h++) {
-      var hexpos = new PIXI.Point(w * 16 + 16 * h, h * 12 - 12 * w);
+  for (var x = 0; x < top; x++) {
+    for (var y = 1; y < top; y++) {
+      var hexpos = new PIXI.Point(x * 16 + 16 * y, y * 12 - 12 * x);
       if (!this._hexagonWithinMap(hexpos)) {
-        this.pathfinding.fillPathMap(w, h, 1, null);
+        this.pathfinding.fillPathMap(x, y, 1, null);
         continue;
       }
 
@@ -177,8 +178,8 @@ Map.prototype._placeHexagonGrid = function() {
       sprite.anchor.set(0.5, 0.5);
       sprite.position.set(hexpos.x, hexpos.y);
       sprite.coord = {
-        w: w,
-        h: h
+        x: x,
+        y: y
       };
 
       sprite.interactive = true;
@@ -188,9 +189,9 @@ Map.prototype._placeHexagonGrid = function() {
 
       this.container.children[1].addChild(sprite);
 
-      this._placeHexagonCoords(hexpos.x, hexpos.y, w, h);
+      this._placeHexagonCoords(hexpos.x, hexpos.y, x, y);
 
-      this.pathfinding.fillPathMap(w, h, 0, sprite);
+      this.pathfinding.fillPathMap(x, y, 0, sprite);
     }
   }  
 };

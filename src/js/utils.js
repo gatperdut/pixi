@@ -27,6 +27,24 @@ Utils.prototype.deg2rad = function(deg) {
   return deg * (Math.PI / 180);
 };
 
-Utils.prototype.orientation = function(dx, dy) {
+Utils.prototype.samePoint = function(p1, p2) {
+  return p1.x === p2.x && p1.y === p2.y;
+};
 
+Utils.prototype.pointAmong = function(points, point) {
+  var self = this;
+  var result = false;
+  _.each(points, function(somepoint) {
+    if (self.samePoint(somepoint, point)) {
+      result = true;
+    }
+  });
+
+  return result;
+};
+
+Utils.prototype.dirBetween = function(hex1, hex2) {
+  var dx = hex2.x - hex1.x;
+  var dy = hex2.y - hex1.y;
+  return this.orientation['' + dx + dy];
 };

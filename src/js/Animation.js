@@ -3,6 +3,7 @@
 function Animation(critter) {
   this.critter = critter;
   this.ticker  = new PIXI.Ticker();
+  this.ticker.autoStart = true;
   this.action  = 'AA';
   this.counter = 0;
   this.fnum    = 0;
@@ -16,19 +17,19 @@ function Animation(critter) {
   };
 }
 
-Animation.prototype.addListener = function(anicallback, type) {
-  if (_.include(this.listeners[type], anicallback)) {
-    console.error('Tried to add the same AniCallback (' + type + ') twice for ' + this.critter.name + '.');
+Animation.prototype.addListener = function(anicallback) {
+  if (_.include(this.listeners[anicallback.type], anicallback)) {
+    console.error('Tried to add the same AniCallback (' + anicallback.type + ') twice for ' + this.critter.name + '.');
     return;
   }
-  this.listeners[type].push(anicallback);
+  this.listeners[anicallback.type].push(anicallback);
 };
 
-Animation.prototype.remListener = function(anicallback, type) {
-  var initiallength = this.listeners[type].length;
-  this.listeners[type] = _.without(this.listeners[type], anicallback);
-  if (initiallength === this.listeners[type]) {
-    console.error('Tried to remove a non-existing AniCallback (' + type + ') for ' + this.critter.name + '.');
+Animation.prototype.remListener = function(anicallback) {
+  var initiallength = this.listeners[anicallback.type].length;
+  this.listeners[anicallback.type] = _.without(this.listeners[anicallback.type], anicallback);
+  if (initiallength === this.listeners[anicallback.type]) {
+    console.error('Tried to remove a non-existing AniCallback (' + anicallback.type + ') for ' + this.critter.name + '.');
   }
 };
 
@@ -43,11 +44,11 @@ Animation.prototype._galleryRoot = function() {
 };
 
 Animation.prototype.start = function() {
-  if (fe.app.ticker.started) {
+  if (this.ticker.started) {
     console.error('Animation ticker for ' + this.critter.name + ' is already started.');
   }
   this.counter = 0;
-  fe.app.ticker.add(delta => this.iterate(delta));
+  this.ticker.add(delta => this.iterate(delta));
 };
 
 Animation.prototype.setSprite = function() {
@@ -77,7 +78,7 @@ Animation.prototype.resetFrameAdj = function() {
 
 Animation.prototype.updateFrameAdj = function() {
   this.frameAdj.x += this._frameOffset(this.fnum).x;
-  this.frameAdj.y += this._frameOffset(this.fnum).y; 
+  this.frameAdj.y += this._frameOffset(this.fnum).y;
 };
 
 Animation.prototype.iterate = function(delta) {
@@ -105,18 +106,18 @@ Animation.prototype.iterate = function(delta) {
     this.fnum++;
     if (this._invalidFNum()) {
       this.fnum = 0;
-      this.callListeners('end');
       this.resetFrameAdj();
+      this.callListeners('end');
     }
   }
 };
 
 Animation.prototype.stop = function() {
-  if (!fe.app.ticker.started) {
+  if (!this.ticker.started) {
     console.error('Animation ticker for ' + this.critter.name + ' is not started.');
     return;
   }
-  fe.app.ticker.stop();
+  this.ticker.stop();
   this.resetFrameAdj();
   this.counter = 0;
   this.fnum = 0;

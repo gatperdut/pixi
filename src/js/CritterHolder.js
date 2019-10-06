@@ -13,5 +13,4 @@ CritterHolder.prototype.addCritter = function(name, actor, w, h) {
   this.critters[name] = new Critter(name, actor);
   this.critters[name].place(w, h);
   fe.map.container.children[2].addChild(this.critters[name].sprite);
-  this.critters[name].animation.start();
 };

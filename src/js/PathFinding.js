@@ -65,7 +65,13 @@ PathFinding.prototype._performWalk = function(path) {
   fe.critterholder.critters.male.walker.walk(path);
 };
 
-PathFinding.prototype.findPath = function(data, perform) {
+PathFinding.prototype.findPath = function(coord, perform) {
+  var critter = fe.critterholder.critters.male;
+
+  if (!critter || fe.utils.samePoint(critter.coord, coord)) {
+    return;
+  }
+
   this.easystar.setGrid(this.hexmap.obstacles);
   this.easystar.setAcceptableTiles([0]);
   this.easystar.enableDiagonals();
@@ -73,7 +79,9 @@ PathFinding.prototype.findPath = function(data, perform) {
 
   var callback = perform ? this._performWalk.bind(this) : this._drawPath.bind(this);
 
-  this.easystar.findPath(20, 20, data.target.coord.w, data.target.coord.h, callback);
+  var origin = critter.intercoord ? critter.intercoord : critter.coord;
+
+  this.easystar.findPath(origin.x, origin.y, coord.x, coord.y, callback);
   this.easystar.calculate();
 };
 

@@ -1,17 +1,18 @@
 'use strict';
 
 function Critter(name, actor) {
-  this.name      = name;
-  this.actor     = actor;
-  this.direction = 4;
-  this.animation = new Animation(this);
+  this.name       = name;
+  this.actor      = actor;
+  this.direction  = 4;
+  this.animation  = new Animation(this);
 
-  this.sprite    = new PIXI.Sprite(this._galleryRoot().textures[this.direction][this.animation.fnum]);
+  this.sprite     = new PIXI.Sprite(this._galleryRoot().textures[this.direction][this.animation.fnum]);
   this.sprite.anchor.set(0.5, 1.0);
 
-  this.coord     = new PIXI.Point(0, 0);
+  this.coord      = new PIXI.Point(0, 0);
+  this.intercoord = null;
 
-  this.walker    = new Walker(this);
+  this.walker     = new Walker(this);
 }
 
 Critter.prototype._galleryRoot = function() {
