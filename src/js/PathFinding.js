@@ -57,17 +57,15 @@ PathFinding.prototype._drawPath = function(path) {
   });
 };
 
-PathFinding.prototype._performWalk = function(path) {
+PathFinding.prototype._performWalk = function(critter, path) {
   if (!this._pathValid(path)) {
     return;
   }
 
-  fe.critterholder.critters.male.walker.walk(path);
+  critter.walker.walk(path);
 };
 
-PathFinding.prototype.findPath = function(coord, perform) {
-  var critter = fe.critterholder.critters.male;
-
+PathFinding.prototype.findPath = function(critter, coord, perform) {
   if (!critter || fe.utils.samePoint(critter.coord, coord)) {
     return;
   }
@@ -77,7 +75,7 @@ PathFinding.prototype.findPath = function(coord, perform) {
   this.easystar.enableDiagonals();
   //this.easystar.disableCornerCutting();
 
-  var callback = perform ? this._performWalk.bind(this) : this._drawPath.bind(this);
+  var callback = perform ? this._performWalk.bind(this, critter) : this._drawPath.bind(this);
 
   var origin = critter.intercoord ? critter.intercoord : critter.coord;
 

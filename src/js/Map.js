@@ -28,6 +28,10 @@ Map.prototype._setContainers = function() {
   this.container.addChild(tiles);
 
   var hexagons = new PIXI.Container();
+  var hexsprites = new PIXI.Container();
+  var hexcoords = new PIXI.Container();
+  hexagons.addChild(hexsprites);
+  hexagons.addChild(hexcoords)
   this.container.addChild(hexagons);
 
   var critters = new PIXI.Container();
@@ -126,7 +130,7 @@ Map.prototype._placeHexagonCoords = function(x, y, w, h) {
   coord.x = x - 12;
   coord.y = y - 7;
 
-  this.container.children[1].addChild(coord);
+  this.container.children[1].children[1].addChild(coord);
 };
 
 Map.prototype._hexagonWithinMap = function(position) {
@@ -152,7 +156,7 @@ Map.prototype._hexagonWithinMap = function(position) {
 };
 
 Map.prototype._mouseover = function(data) {
-  this.pathfinding.findPath(data.target.coord, false);
+  this.pathfinding.findPath(fe.critterholder.critters.male, data.target.coord, false);
 };
 
 Map.prototype._mouseout = function(data) {
@@ -161,7 +165,7 @@ Map.prototype._mouseout = function(data) {
 
 Map.prototype._mousedown = function(data) {
   this.pathfinding.clearPath();
-  this.pathfinding.findPath(data.target.coord, true);
+  this.pathfinding.findPath(fe.critterholder.critters.male, data.target.coord, true);
 };
 
 Map.prototype._placeHexagonGrid = function() {
@@ -187,7 +191,7 @@ Map.prototype._placeHexagonGrid = function() {
       sprite.mouseout  = this._mouseout.bind(this);
       sprite.mousedown = this._mousedown.bind(this);
 
-      this.container.children[1].addChild(sprite);
+      this.container.children[1].children[0].addChild(sprite);
 
       this._placeHexagonCoords(hexpos.x, hexpos.y, x, y);
 
