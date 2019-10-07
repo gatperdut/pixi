@@ -48,3 +48,29 @@ Utils.prototype.dirBetween = function(hex1, hex2) {
   var dy = hex2.y - hex1.y;
   return this.orientation['' + dx + dy];
 };
+
+Utils.prototype.reverseM = function(m) {
+  var result = []
+
+  for (var i = 0; i < m.length; i++) {
+    for (var j = 0; j < m[0].length; j++) {
+      if (!result[j]) {
+        result[j] = [];
+      }
+      result[j][i] = m[i][j];
+    }
+  }
+  return result;
+};
+
+Utils.prototype.reverseP = function(path) {
+  var result = [];
+  _.each(path, function(step) {
+    result.shift({
+      x: step.y,
+      y: step.x
+    });
+  });
+
+  return result;
+};

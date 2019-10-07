@@ -18,7 +18,10 @@ Keyboard.prototype.setup = function() {
       fe.critterholder.critters['male'].direction = ++fe.critterholder.critters['male'].direction % 6;
     }
     if (_.include(self.dirKeys, key)) {
-      fe.map.pandir(key);
+      fe.map.panDir(key);
+    }
+    if (key === PIXI.keyboard.Key.H) {
+      fe.states.toggleHexGrid();
     }
   });
 };

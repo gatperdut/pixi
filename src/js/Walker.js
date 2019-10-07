@@ -3,6 +3,8 @@
 function Walker(critter) {
   this.critter = critter;
 
+  this.walking = false;
+
   this.stepcallback    = null;
   this.midstepcallback = null;
 
@@ -13,6 +15,7 @@ Walker.prototype.walk = function(path) {
   this.critter.animation.action = 'AB';
   this.critter.animation.fnum = 0;
   this.critter.animation.counter = 0;
+  this.walking = true;
 
   this._fillTurns(path, null);
 
@@ -74,6 +77,7 @@ Walker.prototype._step = function(path) {
     this.critter.animation.resetFrameAdj();
     this.critter.intercoord = null;
     this.turns.length = 0;
+    this.walking = false;
     return;
   }
 

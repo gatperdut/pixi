@@ -23,6 +23,7 @@
     "console"  : true,
     "document" : true,
     "EasyStar" : true,
+    "fe"       : true,
     "PIXI"     : true,
     "window"   : true
   }

@@ -14,6 +14,7 @@ gulp.task('inject-js', function () {
   )
   .pipe(order([
     'dist/js/pixi-legacy.js',
+    'dist/js/map/Map.js',
     '**/*.js'
   ]))
   .pipe(rename(function (path) {

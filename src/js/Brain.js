@@ -10,6 +10,9 @@ function Brain() {
 }
 
 Brain.prototype.waltz = function() {
+  if (!fe.critterholder.critters.female) {
+    return;
+  }
   var coord = new PIXI.Point(
     fe.critterholder.critters.female.coord.x + Math.floor(Math.random() * 10 - 5),
     fe.critterholder.critters.female.coord.y + Math.floor(Math.random() * 10 - 5)
