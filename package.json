@@ -12,7 +12,7 @@
     "pixi.js-legacy": "5.1.5",
     "pixi-keyboard": "0.9.4",
     "pixi-timer": "1.0.1",
-    "underscore": "1.9.1"
+    "underscore": "1.12.1"
   },
   "devDependencies": {
     "connect": "3.7.0",
